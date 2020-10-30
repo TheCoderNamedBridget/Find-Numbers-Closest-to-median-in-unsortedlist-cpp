@@ -35,18 +35,25 @@ int partition( int a[], int start, int end, bool useAbs )
     {
         if ( useAbs )
         {
+            cout<<"HERE"<<endl;
             if ( a[leftPivIndex] < 0 )
             {
-                a[leftPivIndex] = a[leftPivIndex] * -1;
+                cout<<"HERE before a[leftPivIndex] < 0 left pivot = "<< a[leftPivIndex]<<endl;
+                a[leftPivIndex] = abs(a[leftPivIndex]);
+                cout<<"HERE after a[leftPivIndex] < 0 left pivot = "<<abs(a[leftPivIndex])<<endl;
                 //useAbs = false;
             }
             if ( a[rightPivIndex] < 0 )
             {
-                a[rightPivIndex] = a[rightPivIndex] * -1;
+                cout<<"HERE a[rightPivIndex] < 0"<< a[rightPivIndex]<<endl;
+                a[rightPivIndex] = abs(a[rightPivIndex]);
+                cout<<"HERE after a[rightPivIndex] < 0 left pivot = "<< abs(a[rightPivIndex])<<endl;
                 //useAbs = false;
             }
         }
-        //cout<<"Herefor"<<endl;
+        cout<<"Herefor"<<endl;
+        cout<<"HERE before a[leftPivIndex] < 0 left pivot = "<< a[leftPivIndex]<<endl;
+        cout<<"HERE a[rightPivIndex] < 0"<< a[rightPivIndex]<<endl;
         if ( leftPivIndex < start )
         {
             //cout<<"Hereleft"<<endl;
@@ -223,7 +230,30 @@ int main()
     //time complexity = O(n)
     for ( int i = 0; i < n; i ++ )
     {
-        if ( (a[i] <= 0) ^ (median <= 0 ))
+        
+        if ( (a[i] <= 0 && median <= 0 ))
+        {
+            diff[i] = a[i] + median;
+        }
+        else 
+        {
+            diff[i] = a[i] - median;
+        }
+        cout<<"Diff index "<<i<<" "<<diff[i]<<endl;
+        
+    }
+    
+    //find the k closest numbers to median.
+    //use diff list
+    //call quick select on the diff list for 1st smallest, 2nd smallest up to k smallest 
+    //runtime quick select = n run n times = n^2
+    //Solution 2 just iterate to the right of 0(median-median value)
+    int closestNums[k];
+    //O(k)
+    for ( int l = 0; l < k; l++ )
+    {
+        /*
+        if ( (a[i] <= 0 ) ^ (median <= 0 ))
         {
             diff[i] = a[i] + median;
         }
@@ -232,19 +262,21 @@ int main()
             diff[i] = a[i] - median;
         }
         
-    }
-    
-    //find the k closest numbers to median.
-    //use diff list
-    //call quick select on the diff list for 1st smallest, 2nd smallest up to k smallest 
-    //runtime quick select = n run n times = n^2
-    int closestNums[k];
-    //O(k)
-    for ( int l = 0; l < k; l++ )
-    {
+        */
+        
+        
+        // if ( median <= 0 || diff[ l + 1 ] <= 0 )
+        // {
+        //     cout<<"Diff closest "<<diff[ l + 1 ] + median<<endl;
+        // }
+        // else
+        // {
+        //     cout<<"Diff closest "<<diff[ l + 1 ] - median<<endl;
+        // }
         useAbs = true;
 
-        closestNums[l] = quickSelect( diff, 0, n - 1, (n / 2) + 1, useAbs ) + median;
+        closestNums[l] = quickSelect( diff, 0, n - 1, l + 1, useAbs );
+        cout<<"Closest nums index "<<l<<" "<<closestNums[l]<<endl;
 
     }
     
