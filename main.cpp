@@ -33,27 +33,6 @@ int partition( int a[], int start, int end, bool useAbs )
     int rightPivIndex = midIndex + 1;
     for ( int k = start; k < end; k ++ )
     {
-        if ( useAbs )
-        {
-            cout<<"HERE"<<endl;
-            if ( a[leftPivIndex] < 0 )
-            {
-                cout<<"HERE before a[leftPivIndex] < 0 left pivot = "<< a[leftPivIndex]<<endl;
-                a[leftPivIndex] = abs(a[leftPivIndex]);
-                cout<<"HERE after a[leftPivIndex] < 0 left pivot = "<<abs(a[leftPivIndex])<<endl;
-                //useAbs = false;
-            }
-            if ( a[rightPivIndex] < 0 )
-            {
-                cout<<"HERE a[rightPivIndex] < 0"<< a[rightPivIndex]<<endl;
-                a[rightPivIndex] = abs(a[rightPivIndex]);
-                cout<<"HERE after a[rightPivIndex] < 0 left pivot = "<< abs(a[rightPivIndex])<<endl;
-                //useAbs = false;
-            }
-        }
-        cout<<"Herefor"<<endl;
-        cout<<"HERE before a[leftPivIndex] < 0 left pivot = "<< a[leftPivIndex]<<endl;
-        cout<<"HERE a[rightPivIndex] < 0"<< a[rightPivIndex]<<endl;
         if ( leftPivIndex < start )
         {
             //cout<<"Hereleft"<<endl;
@@ -66,49 +45,92 @@ int partition( int a[], int start, int end, bool useAbs )
             //do stuff for left side
             goRight = false;
         }
-        if ( goLeft && goRight && a[leftPivIndex] > piv && a[rightPivIndex] < piv )//if emlent on left and right need switching switch
+        if ( !useAbs )
         {
-            //cout<<"double switch"<<endl;
-            int temp = a[leftPivIndex];
-            a[leftPivIndex] = a[rightPivIndex];
-            a[rightPivIndex] = temp;
+            
+            if ( goLeft && goRight && a[leftPivIndex] > piv && a[rightPivIndex] < piv )//if emlent on left and right need switching switch
+            {
+                //cout<<"double switch"<<endl;
+                int temp = a[leftPivIndex];
+                a[leftPivIndex] = a[rightPivIndex];
+                a[rightPivIndex] = temp;
+            }
+            else if ( goRight && (a[rightPivIndex] < piv) )//only switch right
+            {
+                int pivPlusOne = a[midIndex + 1];
+                a[midIndex + 1] = a[rightPivIndex];
+                a[rightPivIndex] = pivPlusOne;
+                
+                //switches piv and element to the right of piv
+                int pivValue = a[midIndex];
+                a[midIndex] = a[midIndex + 1];
+                a[midIndex + 1] = pivValue;
+                
+                midIndex++;
+                
+            }
+            else if ( goLeft && (a[leftPivIndex] > piv) )//only switch left
+            {
+                //cout<<"left switch"<<endl;
+                //switches element to left of piv with other left element <> piv
+                int pivMinusOne = a[midIndex - 1];
+                a[midIndex - 1] = a[leftPivIndex];
+                a[leftPivIndex] = pivMinusOne;
+                
+                //switches piv and element to the right of piv
+                int pivValue = a[midIndex];
+                a[midIndex] = a[midIndex - 1];
+                a[midIndex - 1] = pivValue;
+                
+                midIndex--;
+            }
+            leftPivIndex --;
+            rightPivIndex ++;
         }
-        else if ( goRight && (a[rightPivIndex] < piv) )//only switch right
+        else if ( useAbs )
         {
-            int pivPlusOne = a[midIndex + 1];
-            a[midIndex + 1] = a[rightPivIndex];
-            a[rightPivIndex] = pivPlusOne;
-            
-            //switches piv and element to the right of piv
-            int pivValue = a[midIndex];
-            a[midIndex] = a[midIndex + 1];
-            a[midIndex + 1] = pivValue;
-            
-            midIndex++;
-            
+            if ( goLeft && goRight && abs(a[leftPivIndex]) > abs(piv) && abs(a[rightPivIndex]) < abs(piv) )//if emlent on left and right need switching switch
+            {
+                //cout<<"double switch"<<endl;
+                int temp = a[leftPivIndex];
+                a[leftPivIndex] = a[rightPivIndex];
+                a[rightPivIndex] = temp;
+            }
+            else if ( goRight && (abs(a[rightPivIndex]) < abs(piv)) )//only switch right
+            {
+                int pivPlusOne = a[midIndex + 1];
+                a[midIndex + 1] = a[rightPivIndex];
+                a[rightPivIndex] = pivPlusOne;
+                
+                //switches piv and element to the right of piv
+                int pivValue = a[midIndex];
+                a[midIndex] = a[midIndex + 1];
+                a[midIndex + 1] = pivValue;
+                
+                midIndex++;
+                
+            }
+            else if ( goLeft && (abs(a[leftPivIndex]) > abs(piv)) )//only switch left
+            {
+                //cout<<"left switch"<<endl;
+                //switches element to left of piv with other left element <> piv
+                int pivMinusOne = a[midIndex - 1];
+                a[midIndex - 1] = a[leftPivIndex];
+                a[leftPivIndex] = pivMinusOne;
+                
+                //switches piv and element to the right of piv
+                int pivValue = a[midIndex];
+                a[midIndex] = a[midIndex - 1];
+                a[midIndex - 1] = pivValue;
+                
+                midIndex--;
+            }
+            leftPivIndex --;
+            rightPivIndex ++;
         }
-        else if ( goLeft && (a[leftPivIndex] > piv) )//only switch left
-        {
-            //cout<<"left switch"<<endl;
-            //switches element to left of piv with other left element <> piv
-            int pivMinusOne = a[midIndex - 1];
-            a[midIndex - 1] = a[leftPivIndex];
-            a[leftPivIndex] = pivMinusOne;
-            
-            //switches piv and element to the right of piv
-            int pivValue = a[midIndex];
-            a[midIndex] = a[midIndex - 1];
-            a[midIndex - 1] = pivValue;
-            
-            midIndex--;
-        }
-        // cout<<"11piv index "<<midIndex<<" piv value "<<piv<<endl;
-        // cout<<"11element index "<<midIndex + 1<<" element value "<<a[midIndex + 1]<<endl;
-        // cout<<"goRight "<<goRight<<endl;
-        // cout<<"(a[rightPivIndex] < piv) "<<(a[rightPivIndex] < piv)<<endl;
-        leftPivIndex --;
-        rightPivIndex ++;
-    }
+        
+        
+    }//end of for loop
     return midIndex;
 }
 
@@ -147,8 +169,6 @@ int quickSelectIndexReturn( int a[], int s, int e, int k, bool useAbs)
     // cout<<"k "<<k<<" pivot index "<< (pivIndex + 1)<<endl;
     if ( k - 1 == pivIndex -s)
     {
-        cout<<"basecase "<<endl;
-        cout<<"pivIndex"<<pivIndex<<endl;
         return pivIndex;
     }
     else if ( pivIndex - s > k - 1 )//k is to right of piv index
@@ -163,20 +183,6 @@ int quickSelectIndexReturn( int a[], int s, int e, int k, bool useAbs)
     
 }
 
-// void maxNums( int a[], int numLarge, int size )
-// {
-    
-//     int index = size - numLarge;
-//     int pivIndex = quickSelectIndexReturn( a, 0, size - 1, index );
-//     cout<<"pivIndex"<<pivIndex<<" Largest Numbers: "<<endl;
-//     for ( int i = pivIndex + 1; i < size; i ++ )
-//     {
-//         cout<<"In "<<a[i]<<endl;
-//     }
-// }
-
-
-
 int main()
 {
     //PART A
@@ -187,10 +193,7 @@ int main()
         cout<<"Enter a positive non zero integer: ";
         cin >> n;
     }
-    
     int a[n];
-    
-    
     
     srand (time(NULL));
     for ( int i = 0; i < n; i++ )
@@ -198,9 +201,7 @@ int main()
         int posOrNeg = rand() % 2 + 1;
         int posNum = rand() % 101;//0 - 100
         int negNum = rand() % 101 -100;//-100 - -1
-        //cout<<"posOrNeg "<<posOrNeg<<endl;
-        //cout<<"posNum "<<posNum<<endl;
-        //cout<<"negNum "<<negNum<<endl;
+
         if ( posOrNeg == 2 )//posOrNeg = 2 +> do pos
         {
             a[i] = posNum;
@@ -220,7 +221,7 @@ int main()
         cout<<"Enter a number between 1 and "<<n<<" k = ";
         cin>>k;
     }
-    
+    k = k + 1;
     //find median median = size / 2
     bool useAbs = false;
     int median = quickSelect( a, 0, n - 1, (n / 2) + 1, useAbs );
@@ -231,7 +232,8 @@ int main()
     for ( int i = 0; i < n; i ++ )
     {
         
-        if ( (a[i] <= 0 && median <= 0 ))
+        //{-55,-3,3,8,34};
+        if ( (a[i] > 0 && median <= 0 ))
         {
             diff[i] = a[i] + median;
         }
@@ -239,7 +241,7 @@ int main()
         {
             diff[i] = a[i] - median;
         }
-        cout<<"Diff index "<<i<<" "<<diff[i]<<endl;
+        //cout<<"Diff index "<<i<<" "<<diff[i]<<endl;
         
     }
     
@@ -248,56 +250,30 @@ int main()
     //call quick select on the diff list for 1st smallest, 2nd smallest up to k smallest 
     //runtime quick select = n run n times = n^2
     //Solution 2 just iterate to the right of 0(median-median value)
-    int closestNums[k];
+    useAbs = true;
+    int endingIndexPrintTo = quickSelectIndexReturn( diff, 0, n - 1, k, useAbs );
     //O(k)
-    for ( int l = 0; l < k; l++ )
+    if ( endingIndexPrintTo > 2 )
     {
-        /*
-        if ( (a[i] <= 0 ) ^ (median <= 0 ))
+        cout<<"Values Closest To Median "<<endl;
+    }
+    else
+    {
+        cout<<"Value Closest To Median "<<endl;
+    }
+    for ( int l = 1; l < endingIndexPrintTo + 1; l++ )
+    {
+        if ( (diff[l] > 0 && median <= 0 ))
         {
-            diff[i] = a[i] + median;
+            diff[l] = diff[l] - median;
         }
         else 
         {
-            diff[i] = a[i] - median;
+            diff[l] = diff[l] + median;
         }
-        
-        */
-        
-        
-        // if ( median <= 0 || diff[ l + 1 ] <= 0 )
-        // {
-        //     cout<<"Diff closest "<<diff[ l + 1 ] + median<<endl;
-        // }
-        // else
-        // {
-        //     cout<<"Diff closest "<<diff[ l + 1 ] - median<<endl;
-        // }
-        useAbs = true;
-
-        closestNums[l] = quickSelect( diff, 0, n - 1, l + 1, useAbs );
-        cout<<"Closest nums index "<<l<<" "<<closestNums[l]<<endl;
-
+        cout<<diff[l]<<endl;
     }
-    
-    for ( int l = 0; l < k; l++ )
-    {
-        
-        cout<<"Array Of Closest Nums index = "<<l<<" "<<closestNums[l]<<endl;
-    }
-    
-    
-    //cout<<"QuickSelect: "<<quickSelect( a, 0, size - 1, k)<<endl;
-    
-    // //Part B
-    // int numLarge = 0;
-    // while ( numLarge < 1 )
-    // {
-    //     cout<<"Enter desired number of largest elements: ";
-    //     cin>>numLarge;
-    // }
-    // maxNums( a, numLarge, size );
+
     return 0;
 }
-
 
